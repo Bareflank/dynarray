@@ -68,12 +68,12 @@ endif()
 if(NOT TARGET iwyu)
     find_program(IWYU_PATH "include-what-you-use")
     if(IWYU_PATH)
-        find_package(PythonInterp)
-        if(NOT PYTHONINTERP_FOUND)
-            message(FATAL_ERROR "python is required for include-what-you-use")
+        find_package(Python COMPONENTS Interpreter)
+        if(NOT Python_FOUND)
+            message(FATAL_ERROR "Python is required for include-what-you-use")
         endif()
         add_custom_target(iwyu
-            COMMAND "${PYTHON_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/utils/iwyu_tool.py" -p "${CMAKE_BINARY_DIR}" -j ${CMAKE_NUM_PROCESSORS} --
+            COMMAND "${Python_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/utils/iwyu_tool.py" -p "${CMAKE_BINARY_DIR}" -j ${CMAKE_NUM_PROCESSORS} --
                     -Xiwyu --no_comments
                     -Xiwyu --quoted_includes_first
                     -Xiwyu --cxx17ns
@@ -86,6 +86,6 @@ if(NOT TARGET iwyu)
         if(NOT IWYU_PATH_NOT_FOUND_MESSAGE)
             message(STATUS "${BF_COLOR_YLW}unable to locate 'include-what-you-use'${BF_COLOR_RST}")
         endif()
-        SET(IWYU_PATH_NOT_FOUND_MESSAGE ON CACHE BOOL "IWYU not found message" FORCE)
+        set(IWYU_PATH_NOT_FOUND_MESSAGE ON CACHE BOOL "IWYU not found message" FORCE)
     endif()
 endif()
